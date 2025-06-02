@@ -10,7 +10,7 @@ export type GameStatus = "x" | "o" | "tie" | null
 type Game = {
   board: Board,
   currentPlayer: Player,
-  gameStatus : GameStatus,
+  gameStatus? : GameStatus,
 }
 
 export const initialGameState = (): Game => {
@@ -20,8 +20,7 @@ export const initialGameState = (): Game => {
       [null, null, null],
       [null, null, null],
       [null, null, null]
-    ], 
-    gameStatus: null
+    ]
   }
 }
 
@@ -39,6 +38,32 @@ const winningCombos :  CellIndex [] [] = [
   [[0, 2], [1, 1], [2, 0]],
 ]
 
+const isWinner = (board: Board, player: Player): boolean => {
+  for (const combo of winningCombos) {
+    const [[r1, c1], [r2, c2], [r3, c3]] = combo;
+
+    if (
+      board[r1][c1] === player &&
+      board[r2][c2] === player &&
+      board[r3][c3] === player
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export const getGameStatus = (board:Board):GameStatus => {
+  if(isWinner(board, "x")) return "x"
+  if(isWinner(board, "o")) return "o"
+
+  // check for tie
+  const boardIsFull = board.every(row => row.every(cell => cell !== null));
+  if (boardIsFull) return "tie";
+  return null; // game still in progress
+}
+
+
 
 export const makeMove = (game:Game,position: CellIndex) => {
   const [row, col ] = position
@@ -50,4 +75,8 @@ export const makeMove = (game:Game,position: CellIndex) => {
   const currentGame = structuredClone(game)
   currentGame.board[row] [col] = game.currentPlayer
   currentGame.currentPlayer = currentGame.currentPlayer === 'x' ? 'o' : 'x'
+  currentGame.gameStatus = getGameStatus(currentGame.board)
+
+  return currentGame
+
 };
