@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import { initialGameState, makeMove, type CellIndex } from './gameLogic/game'
+import { initialGameState, type CellIndex } from './gameLogic/game'
 
 type GameBoxProps = {
   onClick: () => void 
@@ -17,10 +17,43 @@ function GridBox ({onClick, game}: GameBoxProps) {
 function App() {
   const [game, setGame] = useState(initialGameState)
 
-  const cellClick = (index:CellIndex ) => {
-    if(game.gameStatus) return
-      setGame(prev => makeMove(prev,index))
+  async function fetchInitialGameState() {
+    try{
+      const res = await fetch('/api/game',{method: "POST"})
+      const data = await res.json()
+      //console.log(data)
+      setGame(data)
+
+    } catch(error){
+      console.log(error)
+    }
   }
+
+  useEffect(() => {
+    fetchInitialGameState()
+  }, []);
+
+  const cellClick = async (index:CellIndex ) => {
+    const row = index[0]
+    const col = index[1]
+
+    if(game.gameStatus) return
+
+    const res = await fetch(`/api/game/${game.id}/move`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({row: row, col: col})
+    })
+
+    const data = await res.json()
+    setGame(data)
+  }
+  
+  const onResetHandler = () => {
+    fetchInitialGameState()
+  }
+  
+
 
   return (
   <div>
@@ -47,7 +80,7 @@ function App() {
       {game.gameStatus && 
         <div className='text-green-400 text-3xl'>PLAYER {game.gameStatus} WON
 
-          <div className='text-5xl mt-5 text-red-400 border border-white' onClick={()=> {setGame(initialGameState)}}>RESTART</div>
+          <div className='text-5xl mt-5 text-red-400 border border-white' onClick={onResetHandler}>RESTART</div>
 
         </div>
       }

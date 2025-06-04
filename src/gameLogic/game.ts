@@ -7,7 +7,8 @@ export type Board = [Row , Row, Row]
 export type CellIndex= [0 | 1 | 2, 0 | 1 | 2]
 export type GameStatus = "x" | "o" | "tie" | null
 
-type Game = {
+export type Game = {
+  id: string,
   board: Board,
   currentPlayer: Player,
   gameStatus? : GameStatus,
@@ -15,6 +16,7 @@ type Game = {
 
 export const initialGameState = (): Game => {
   return {
+    id: '',
     currentPlayer: "o",
     board: [
       [null, null, null],
