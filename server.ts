@@ -8,17 +8,19 @@ app.use(express.json())
 
 const port = 3000;
 
-app.post("/api/game", (req, res) => {
-  const game = createGame();
+app.post("/api/game", async (req, res) => {
+  const game = await createGame();
+  console.log("Created game:", game); // Debug here
   res.json(game)
 });
 
-app.post('/api/game/:id/move',(req,res) => {
+app.post('/api/game/:id/move', async (req,res) => {
   try {
     const id = req.params.id 
     console.log(req.body)
     const { row, col } = req.body
-    const result = makeMoveById(id, [row, col])
+    const result = await makeMoveById(id, [row, col])
+    console.log(result)
     res.json(result)
   } catch (err){
     console.log(err.message)
