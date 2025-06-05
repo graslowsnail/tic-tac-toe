@@ -70,7 +70,7 @@ export const getGameStatus = (board:Board):GameStatus => {
 export const makeMove = (game:Game,position: CellIndex) => {
   const [row, col ] = position
   if(game.board[row] [col] != null ) {
-    console.log('invalid move, position already taken')
+    console.log('invalid move, position already taken bro')
     return game
   }
 

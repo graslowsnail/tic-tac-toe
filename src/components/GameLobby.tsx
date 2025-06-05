@@ -10,7 +10,7 @@ function GameLobby () {
   <div>
     <div> game list view</div>
     <div className='flex flex-col'> {data.map((containerObject, i )=> (
-        <Link className='border m-2' to={`game/${containerObject.id}`} > {containerObject.id}</Link>
+        <Link key={i}className='border m-2' to={`/game/${containerObject.id}`} > {containerObject.id}</Link>
       ))}</div>
   </div>
   )

@@ -32,10 +32,35 @@ export async function createGame(): Promise<Game> {
 
 }
 
+export async function getGameById(id: string ): Promise<Game> {
+  const result = await db.select().from(gamesTable).where(eq(gamesTable.id, id))
+  if(result.length === 0 ) {
+    throw new Error('Game not found')
+  }
+  const game = result[0]
+
+  return {
+    id: game.id,
+    currentPlayer: game.currentPlayer,
+    board: game.board,
+    gameStatus: game.result ?? null,
+  } as Game
+}
+
 export async function makeMoveById(id: string, index: CellIndex): Promise<Game> {
   const gameInDb = await db.query.gamesTable.findFirst({
     where: eq(gamesTable.id, id),
   })
+
+  if (gameInDb?.result != null) {
+    console.log("invalid move bro, this game is over")
+    return {
+      id: gameInDb.id,
+      currentPlayer: gameInDb.currentPlayer,
+      board: gameInDb.board,
+      gameStatus: gameInDb.result ?? null,
+    } as Game
+  }
 
   if(!gameInDb) throw new Error("game not found bro");
 

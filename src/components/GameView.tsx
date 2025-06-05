@@ -1,6 +1,7 @@
 // game view component
 import { useState, useEffect } from 'react'
-import { initialGameState, type CellIndex} from '../gameLogic/game'
+import { initialGameState, type CellIndex, type Game} from '../gameLogic/game'
+import { Link, useLoaderData, useNavigate }from 'react-router'
 
 type GameBoxProps = {
   onClick: () => void
@@ -14,29 +15,32 @@ function GridBox ({onClick, game}: GameBoxProps) {
 }
 
 function GameView() {
-  const [game, setGame] = useState(initialGameState)
+  let navigate = useNavigate();
+  const { data } = useLoaderData<{data: Game}>()
+  const [game, setGame] = useState(data)
+  
+  //sync the game state to the loader state
+  useEffect(() => {
+    console.log(data, "############# USE EFFECT DATA")
+    setGame(data)
+  }, [data])
 
   async function fetchInitialGameState() {
     try{
       const res = await fetch('/api/game', {method: "POST"})
-      const data = await res.json()
+      const newGame= await res.json()
       //console.log(data)
-      setGame(data)
-
+      //setGame(data)
+      navigate(`/game/${newGame.id}`)
     } catch(error) {
         console.log(error)
     }
   }
 
-  useEffect(() => {
-    fetchInitialGameState()
-  }, []);
 
   const cellClick = async (index:CellIndex ) => {
       const row = index[0]
       const col = index[1]
-
-      if(game.gameStatus) return
 
       const res = await fetch(`/api/game/${game.id}/move`, {
         method: "POST",
@@ -75,10 +79,9 @@ function GameView() {
             current player: {game.currentPlayer}
         </div>
         {game.gameStatus && 
-          <div className='text-green-400 text-3xl'>PLAYER {game.gameStatus} WON
-
-            <div className='text-5xl mt-5 text-red-400 border border-white' onClick={onResetHandler}>RESTART</div>
-
+          <div className='text-green-400 text-3xl'>
+            {game.gameStatus === "tie" ? "IT'S A TIE!" : `PLAYER ${game.gameStatus.toUpperCase()} WON`}
+            <div className='text-5xl mt-5 text-red-400 border border-white cursor-pointer' onClick={onResetHandler}>RESTART</div>
           </div>
         }
         <div>

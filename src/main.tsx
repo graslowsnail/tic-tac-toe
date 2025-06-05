@@ -30,6 +30,18 @@ const router = createBrowserRouter([
       {
         path: "/game/:gameId",
         Component: GameView,
+        loader: async ({params}) => {
+          try {
+            console.log(params, "########## router call")
+            if(!params.gameId) throw new Error("Game ID is required")
+            const res = await fetch(`/api/game/${params.gameId}`, {method: "GET"})
+            const data = await res.json()
+            console.log(data, "########## router call")
+            return { data }
+          } catch(error) {
+            console.log(error)
+          }
+        }
       },
     ],
   },
