@@ -1,12 +1,21 @@
 // logic for the backend code
-import {Game, initialGameState, CellIndex, makeMove} from "../src/gameLogic/game"
+// this is like a CONTROLLER file that runs the actions to keep our routes clean
+import {Game, initialGameState, CellIndex, makeMove, Board, Player} from "../src/gameLogic/game"
 import {v4 as uuid } from "uuid"
 import { db } from "../src/db/index"
 import { gamesTable } from "../src/db/schema"
 import { eq } from "drizzle-orm"
 
 // temp storage for games in memory
-const gameStore = new Map<string, Game>()
+export async function getAllGames (): Promise<Game[]> {
+  const listOfGames = await db.select().from(gamesTable)
+  return listOfGames.map(game => ({
+    id: game.id,
+    currentPlayer: game.currentPlayer,
+    board: game.board,
+    gameStatus: game.result ?? null,
+  } as Game))
+};
 
 export async function createGame(): Promise<Game> {
   const id = uuid();
@@ -40,7 +49,7 @@ export async function makeMoveById(id: string, index: CellIndex): Promise<Game> 
       result: updatedGame.gameStatus ?? null,
     })
     .where(eq(gamesTable.id, id))
-  gameStore.set(id,updatedGame)
+    //gameStore.set(id,updatedGame)
 
   return updatedGame
 } 
