@@ -1,12 +1,36 @@
 //e.g server.js
 import express from "express";
 import ViteExpress from "vite-express";
-import {createGame, makeMoveById} from "./serverLogic/api"
+import { getAllGames, createGame, makeMoveById, getGameById } from "./serverLogic/api"
 
 const app = express();
 app.use(express.json())
 
 const port = 3000;
+
+app.get("/api/game", async (req, res) => {
+  try {
+    const games = await getAllGames();
+    //console.log(games)
+    res.send(games)
+
+  } catch(err) {
+    console.log("error message:" , err)
+  }
+});
+
+app.get("/api/game/:id", async (req, res) => {
+  try {
+    const gameId = req.params.id
+
+    const game = await getGameById(gameId);
+    //console.log(game)
+    res.send(game)
+
+  } catch(err) {
+    console.log("error message:" , err)
+  }
+});
 
 app.post("/api/game", async (req, res) => {
   const game = await createGame();
@@ -17,10 +41,10 @@ app.post("/api/game", async (req, res) => {
 app.post('/api/game/:id/move', async (req,res) => {
   try {
     const id = req.params.id 
-    console.log(req.body)
+    //console.log(req.body)
     const { row, col } = req.body
     const result = await makeMoveById(id, [row, col])
-    console.log(result)
+    console.log(result.currentPlayer, "SELECTED GRID", row, col)
     res.json(result)
   } catch (err){
     console.log(err.message)
