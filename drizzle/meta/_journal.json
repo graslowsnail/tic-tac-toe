@@ -15,6 +15,13 @@
       "when": 1749080542928,
       "tag": "0001_large_tana_nile",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749241626645,
+      "tag": "0002_little_iceman",
+      "breakpoints": true
     }
   ]
 }

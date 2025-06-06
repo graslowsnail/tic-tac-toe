@@ -1,5 +1,5 @@
 // db schema file
-import { jsonb, pgTable, varchar } from "drizzle-orm/pg-core"
+import { jsonb, pgTable, varchar, timestamp } from "drizzle-orm/pg-core"
 import type { Board } from "../../src/gameLogic/game"
 
 export const gamesTable = pgTable("tic_tac_toe_games",{
@@ -7,5 +7,6 @@ export const gamesTable = pgTable("tic_tac_toe_games",{
   currentPlayer: varchar({ length: 225 }).notNull(),
   board: jsonb().$type<Board>().notNull(),
   result: varchar({ length: 255 }),
+  createdAt: timestamp().notNull().defaultNow()
 });
 
