@@ -19,11 +19,17 @@ function GameLobby () {
 
     <div> game list view</div>
     <div className='flex flex-col'> 
-      {data.map((game, i) => (
-        <Link key={i} className='border m-2' to={`/game/${game.id}`}> 
-          {game.id}
+      {data.map((game, i) => {
+        return game.gameStatus === null ? (
+        <Link key={i} className='border border-green-500 m-2' to={`/game/${game.id}`}> 
+        {game.id}
         </Link>
-      ))}
+        ) : (
+        <Link key={i} className='border m-2' to={`/game/${game.id}`}> 
+        {game.id}
+        </Link>
+        )
+      })}
     </div>
   </div>
   )
