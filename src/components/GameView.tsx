@@ -1,7 +1,7 @@
 // game view component
 import { useState, useEffect } from 'react'
-import { initialGameState, type CellIndex, type Game} from '../gameLogic/game'
-import { Link, useLoaderData, useNavigate }from 'react-router'
+import {  type CellIndex, type Game} from '../gameLogic/game'
+import {  useLoaderData, useNavigate }from 'react-router'
 
 type GameBoxProps = {
   onClick: () => void
