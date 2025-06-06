@@ -1,6 +1,7 @@
 // view of a game 
 import {Link, useLoaderData, useNavigate } from 'react-router'
 import { type Game } from '../gameLogic/game'
+import { SERVER_URL } from '../constants'
 
 function GameLobby () {
   let navigate = useNavigate();
@@ -13,7 +14,7 @@ function GameLobby () {
 
   async function fetchInitialGameState() {
     try{
-      const res = await fetch('http://localhost:3000/api/game', {
+      const res = await fetch(`${SERVER_URL}/api/game`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

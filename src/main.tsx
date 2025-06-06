@@ -4,6 +4,7 @@ import App from './App.tsx'
 import GameLobby from './components/GameLobby.tsx'
 import GameView from  './components/GameView.tsx'
 import { createBrowserRouter, RouterProvider } from "react-router"
+import { SERVER_URL } from './constants'
 
 
 const router = createBrowserRouter([
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
         Component: GameLobby,
         loader: async () => {
           try{
-            const res = await fetch('http://localhost:3000/api/game', {method: "GET"})
+            const res = await fetch(`${SERVER_URL}/api/game`, {method: "GET"})
             const data = await res.json()
             //console.log(data)
            return { data }
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
           try {
             console.log(params, "########## router call")
             if(!params.gameId) throw new Error("Game ID is required")
-            const res = await fetch(`http://localhost:3000/api/game/${params.gameId}`, {method: "GET"})
+            const res = await fetch(`${SERVER_URL}/api/game/${params.gameId}`, {method: "GET"})
             const data = await res.json()
             console.log(data, "########## router call")
             return { data }

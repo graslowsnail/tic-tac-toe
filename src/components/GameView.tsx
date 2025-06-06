@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import type { CellIndex, Game} from '../gameLogic/game'
 import { useLoaderData, useNavigate }from 'react-router'
 import { io } from "socket.io-client"
+import { SERVER_URL } from '../constants'
 
 type GameBoxProps = {
   onClick: () => void
@@ -26,7 +27,7 @@ function GameView() {
   //sync the game state to the loader state
 
   useEffect(() => {
-    const socket = io("http://localhost:3000")
+    const socket = io(SERVER_URL)
     socket.on("connect", () => {
       console.log("connected to socket")
     })
@@ -54,7 +55,7 @@ function GameView() {
 
   async function fetchInitialGameState() {
     try{
-      const res = await fetch('http://localhost:3000/api/game', {
+      const res = await fetch(`${SERVER_URL}/api/game`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +76,7 @@ function GameView() {
       const row = index[0]
       const col = index[1]
 
-      const res = await fetch(`http://localhost:3000/api/game/${game.id}/move`, {
+      const res = await fetch(`${SERVER_URL}/api/game/${game.id}/move`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({row: row, col: col})
