@@ -1,7 +1,8 @@
 // game view component
 import { useState, useEffect } from 'react'
-import { type CellIndex, type Game} from '../gameLogic/game'
+import type { CellIndex, Game} from '../gameLogic/game'
 import { useLoaderData, useNavigate }from 'react-router'
+import { io } from "socket.io-client"
 
 type GameBoxProps = {
   onClick: () => void
@@ -21,16 +22,45 @@ function GameView() {
   
   //sync the game state to the loader state
   useEffect(() => {
-    console.log(data, "############# USE EFFECT DATA")
-    setGame(data)
+    const socket = io("http://localhost:3000")
+    socket.on("connect", () => {
+      console.log("connected to socket")
+      // JOIN current game
+      socket.emit("join-game", game.id)
+
+      socket.on("user-joined", (userId: string) => {
+        console.log(`user ${userId} joined`)
+      })
+
+      socket.on("game-updated", (game: Game) => {
+        console.log("game updated", game)
+        setGame(game)
+      })
+      
+      //
+      socket.on("new-game-created", (newGameId: string) => {
+        console.log("received new game id", newGameId)
+        navigate(`/game/${newGameId}`)
+      })
+    })
+
+    return () => {
+      socket.disconnect();
+    }
   }, [data])
 
   async function fetchInitialGameState() {
     try{
-      const res = await fetch('/api/game', {method: "POST"})
+      const res = await fetch('http://localhost:3000/api/game', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({prevGameId: game.id}),
+      })
+
       const newGame= await res.json()
-      //console.log(data)
-      //setGame(data)
+      console.log(newGame, "########## restart game data")
       navigate(`/game/${newGame.id}`)
     } catch(error) {
         console.log(error)
@@ -42,7 +72,7 @@ function GameView() {
       const row = index[0]
       const col = index[1]
 
-      const res = await fetch(`/api/game/${game.id}/move`, {
+      const res = await fetch(`http://localhost:3000/api/game/${game.id}/move`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({row: row, col: col})
