@@ -19,29 +19,32 @@ function GameView() {
   let navigate = useNavigate();
   const { data } = useLoaderData<{data: Game}>()
   const [game, setGame] = useState(data)
-  
+  // whenever my loader gets new data from navigation, SYNC that with my React State
+  useEffect(() => {
+    setGame(data)
+  }, [data])
   //sync the game state to the loader state
+
   useEffect(() => {
     const socket = io("http://localhost:3000")
     socket.on("connect", () => {
       console.log("connected to socket")
-      // JOIN current game
-      socket.emit("join-game", game.id)
+    })
+    // JOIN current game
+    socket.emit("join-game", data.id)
 
-      socket.on("user-joined", (userId: string) => {
-        console.log(`user ${userId} joined`)
-      })
+    socket.on("user-joined", (userId: string) => {
+      console.log(`user ${userId} joined`)
+    })
 
-      socket.on("game-updated", (game: Game) => {
-        console.log("game updated", game)
-        setGame(game)
-      })
-      
-      //
-      socket.on("new-game-created", (newGameId: string) => {
-        console.log("received new game id", newGameId)
-        navigate(`/game/${newGameId}`)
-      })
+    socket.on("game-updated", (game: Game) => {
+      // console.log("game updated", game)
+      setGame(game)
+    })
+    
+    //Listen for when a new game is created
+    socket.on("new-game-created", (newGameId: string) => {
+      navigate(`/game/${newGameId}`)
     })
 
     return () => {
@@ -112,7 +115,7 @@ function GameView() {
         {game.gameStatus && 
           <div className='text-green-400 text-3xl'>
             {game.gameStatus === "tie" ? "IT'S A TIE!" : `PLAYER ${game.gameStatus.toUpperCase()} WON`}
-            <div className='text-5xl mt-5 text-red-400 border border-white cursor-pointer' onClick={onResetHandler}>RESTART</div>
+            <div className='text-5xl mt-5 text-red-400 border border-white cursor-pointer' onClick={onResetHandler}>rematch</div>
           </div>
         }
         <div>
