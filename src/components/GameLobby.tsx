@@ -33,23 +33,21 @@ function GameLobby () {
   return (
   <div>
     {/* Simple Scoreboard */}
-    <div className="mb-4">
+    <div className="mb-4 text-5xl">
       X Wins: {xWins} | O Wins: {oWins} | Ties: {ties}
     </div>
-    <button className="mb-4" onClick={newGameHandler}>
+    <button className="mb-4 bg-green-600 font-bold" onClick={newGameHandler}>
       START A NEW GAME!
     </button>
-
-    <div> game list view</div>
-    <div className='flex flex-col'> 
+    <div className='flex flex-col items-center'> 
       {data.map((game, i) => {
         return game.gameStatus === null ? (
-        <Link key={i} className='border border-green-500 m-2' to={`/game/${game.id}`}> 
-        Join Game room {i + 1 }
+        <Link key={i} className='border border-blue-600 rounded-lg m-2 w-48 h-12 flex items-center justify-center' to={`/game/${game.id}`}> 
+        <span className='text-white text-lg '> Join Game room {i + 1 }</span>
         </Link>
         ) : (
-        <Link key={i} className='border m-2' to={`/game/${game.id}`}> 
-        {game.id}
+        <Link key={i} className='border border-red-500 rounded-lg m-2 w-48 h-12 flex items-center justify-center' to={`/game/${game.id}`}> 
+        <span className='text-white'> Join Game room {i + 1 }</span>
         </Link>
         )
       })}
