@@ -90,9 +90,16 @@ function GameView() {
     }
 
   return(
-    <div>
-        <button onClick={() => navigate('/')} className="mb-4 px-4 py-2 border">Back to Lobby</button>
-        <div className='text-5xl mb-2'>Tik Tac Toe</div>
+    <div >
+      <div className='flex flex-col items-center'>
+        <div className='border border-blue-600 rounded-lg m-2 w-48 h-12 flex items-center justify-center cursor-pointer' onClick={() => navigate('/')}> 
+          <span className='text-white text-lg'>Back to Lobby</span>
+        </div>
+        <div className='text-5xl mb-2'>Tic Tac Toe</div>
+      </div>
+      <div className='text-5xl mb-2'>
+         {game.currentPlayer.toUpperCase()}'s  turn
+      </div>
       <div className='w-125 grid grid-cols-3'>
           <GridBox onClick={() => cellClick([0, 0])} game={game.board[0][0]} />
           <GridBox onClick={() => cellClick([0, 1])} game={game.board[0][1]} />
@@ -109,13 +116,10 @@ function GameView() {
           <GridBox onClick={() => cellClick([2, 1])} game={game.board[2][1]} />
           <GridBox onClick={() => cellClick([2, 2])} game={game.board[2][2]} />
       </div>
-        <div className='text-5xl mb-2'>
-            current player: {game.currentPlayer}
-        </div>
         {game.gameStatus && 
           <div className='text-green-400 text-3xl'>
             {game.gameStatus === "tie" ? "IT'S A TIE!" : `PLAYER ${game.gameStatus.toUpperCase()} WON`}
-            <div className='text-5xl mt-5 text-red-400 border border-white cursor-pointer' onClick={onResetHandler}>rematch</div>
+            <div className='text-5xl mt-5 text-red-400 border border-white rounded-xl cursor-pointer' onClick={onResetHandler}>rematch</div>
           </div>
         }
         <div>

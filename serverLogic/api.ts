@@ -4,11 +4,11 @@ import {Game, initialGameState, CellIndex, makeMove, Board, Player} from "../src
 import {v4 as uuid } from "uuid"
 import { db } from "../src/db/index"
 import { gamesTable } from "../src/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, desc } from "drizzle-orm"
 
 // temp storage for games in memory
 export async function getAllGames (): Promise<Game[]> {
-  const listOfGames = await db.select().from(gamesTable)
+  const listOfGames = await db.select().from(gamesTable).orderBy(desc(gamesTable.createdAt))
   return listOfGames.map(game => ({
     id: game.id,
     currentPlayer: game.currentPlayer,

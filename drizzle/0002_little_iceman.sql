@@ -1,0 +1,1 @@
+ALTER TABLE "tic_tac_toe_games" ADD COLUMN "createdAt" timestamp DEFAULT now() NOT NULL;

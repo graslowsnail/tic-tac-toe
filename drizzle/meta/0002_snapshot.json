@@ -1,0 +1,63 @@
+{
+  "id": "5a4e5fd4-423b-45b6-b6f3-8a8578a5f68e",
+  "prevId": "690e479c-85db-45fa-a504-290c0324bd29",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.tic_tac_toe_games": {
+      "name": "tic_tac_toe_games",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(225)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "currentPlayer": {
+          "name": "currentPlayer",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "board": {
+          "name": "board",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "result": {
+          "name": "result",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
