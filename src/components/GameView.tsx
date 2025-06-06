@@ -1,7 +1,7 @@
 // game view component
 import { useState, useEffect } from 'react'
-import {  type CellIndex, type Game} from '../gameLogic/game'
-import {  useLoaderData, useNavigate }from 'react-router'
+import { type CellIndex, type Game} from '../gameLogic/game'
+import { useLoaderData, useNavigate }from 'react-router'
 
 type GameBoxProps = {
   onClick: () => void
@@ -58,6 +58,7 @@ function GameView() {
 
   return(
     <div>
+        <button onClick={() => navigate('/')} className="mb-4 px-4 py-2 border">Back to Lobby</button>
         <div className='text-5xl mb-2'>Tik Tac Toe</div>
       <div className='w-125 grid grid-cols-3'>
           <GridBox onClick={() => cellClick([0, 0])} game={game.board[0][0]} />
